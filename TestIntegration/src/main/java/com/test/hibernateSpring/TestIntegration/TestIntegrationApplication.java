@@ -8,7 +8,7 @@ public class TestIntegrationApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(TestIntegrationApplication.class, args);
-		System.out.println("Spring running...");
+		System.out.println("Spring running....");
 	}
 
 }
