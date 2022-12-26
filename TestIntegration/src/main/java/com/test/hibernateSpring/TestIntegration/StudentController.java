@@ -7,8 +7,11 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,7 +29,7 @@ public class StudentController {
 		return student;	
 	}
 	
-	@RequestMapping("/AllRecord")
+	@RequestMapping("/")
 	public List showAllData() {
 		Session session = sessionFactory.openSession();
 		Query query = session.createQuery("from Student");
@@ -54,19 +57,57 @@ public class StudentController {
 		return list;
 	}
 	
-	@PutMapping("/updateID/{id}/{name}")
-	public Student updateID(@PathVariable int id, @PathVariable String name) {
+	@PutMapping("/updateID")
+	public Session updateID(@RequestBody Student student) {      //by this code database data change and postman meg errorshow
 		
 		Session session = sessionFactory.openSession();
 		Transaction transaction = session.beginTransaction();
-	
-		Student student = new Student(id,name);	
+		
 		session.update(student);
 		System.out.println("Updated Student ");
 		transaction.commit();
+		return session;
+	}
+	
+	@PostMapping("/insertData/{id}/{name}")
+	public Student insertData(@PathVariable int id, @PathVariable String name) {
+		Session session = sessionFactory.openSession();
+		Transaction transaction = session.beginTransaction();
+		
+		Student student = new Student(id,name);
+		session.save(student);
+		transaction.commit();
+		System.out.println("Inserted new Student data ");
 		return student;
 	}
 	
+	@DeleteMapping("/DeleteStudent")
+	public Student delete() {
+		Session session = sessionFactory.openSession();
+		Transaction transaction = session.beginTransaction();
+	    Student student = session.load(Student.class,101);	
+		session.delete(student) ;
+		transaction.commit();
+		System.out.println("Deleted Student "+session);
+		
+		return student;
+				
+		 
+	}
+	
+//	@DeleteMapping("/DeleteStudent")
+//	public Student delete() {
+//		Session session = sessionFactory.openSession();
+//		Transaction transaction = session.beginTransaction();
+//	    Student student = session.load(Student.class,101);	
+//		session.delete(student) ;
+//		transaction.commit();
+//		System.out.println("Deleted Student "+session);
+//		
+//		return student;
+//				
+//		 
+//	}
 	
 	
 	
